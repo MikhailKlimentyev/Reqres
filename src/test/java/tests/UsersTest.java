@@ -11,6 +11,9 @@ import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import static io.restassured.http.ContentType.JSON;
+import static org.apache.http.HttpHeaders.CONTENT_TYPE;
+
 public class UsersTest extends BaseTest {
 
     private static String USERS_URI = "users";
@@ -116,6 +119,7 @@ public class UsersTest extends BaseTest {
     public void userShouldBeCreated() {
         ValidatableResponse response = getRequestSpecification()
                 .log().all()
+                .header(CONTENT_TYPE, JSON)
                 .body(new UserPayload("morpheus", "leader"))
                 .when()
                 .post(String.format(urlPattern, URL, USERS_URI))
@@ -139,6 +143,7 @@ public class UsersTest extends BaseTest {
     public void userShouldBeUpdated() {
         ValidatableResponse response = getRequestSpecification()
                 .log().all()
+                .header(CONTENT_TYPE, JSON)
                 .pathParam(ID, "2")
                 .body(new UserPayload("morpheus", "zion resident"))
                 .when()
@@ -160,6 +165,7 @@ public class UsersTest extends BaseTest {
     public void userShouldBePatched() {
         ValidatableResponse response = getRequestSpecification()
                 .log().all()
+                .header(CONTENT_TYPE, JSON)
                 .pathParam(ID, "2")
                 .body(new UserPayload("morpheus", "zion resident"))
                 .when()

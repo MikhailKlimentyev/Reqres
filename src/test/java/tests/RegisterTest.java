@@ -5,18 +5,20 @@ import models.ErrorResponse;
 import models.LoginPayload;
 import models.TokenWithIdResponse;
 import org.apache.http.HttpStatus;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
+
+import static io.restassured.http.ContentType.JSON;
+import static org.apache.http.HttpHeaders.CONTENT_TYPE;
 
 public class RegisterTest extends BaseTest {
 
     private static String REGISTER_URI = "register";
 
-    @Ignore
     @Test
     public void tokenShouldBeReturned() {
         ValidatableResponse response = getRequestSpecification()
                 .log().all()
+                .header(CONTENT_TYPE, JSON)
                 .body(new LoginPayload("eve.holt@reqres.in", "pistol"))
                 .when()
                 .post(String.format(urlPattern, URL, REGISTER_URI))
@@ -42,6 +44,7 @@ public class RegisterTest extends BaseTest {
 
         ValidatableResponse response = getRequestSpecification()
                 .log().all()
+                .header(CONTENT_TYPE, JSON)
                 .body(loginPayload)
                 .when()
                 .post(String.format(urlPattern, URL, REGISTER_URI))
@@ -53,6 +56,6 @@ public class RegisterTest extends BaseTest {
 
         ErrorResponse errorResponse = response.extract().body().as(ErrorResponse.class);
         String errorMessage = errorResponse.getError();
-        commonAssertion.validateField(errorMessage, "Missing email or username");
+        commonAssertion.validateField(errorMessage, "Missing password");
     }
 }
