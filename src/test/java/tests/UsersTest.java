@@ -11,10 +11,18 @@ import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-public class UsersTests extends BaseTest {
+public class UsersTest extends BaseTest {
 
     private static String USERS_URI = "users";
     private static String USER_URI = "users/{id}";
+
+    private User sevenExpectedUser = User.builder()
+            .id(7)
+            .email("michael.lawson@reqres.in")
+            .firstName("Michael")
+            .lastName("Lawson")
+            .avatar("https://s3.amazonaws.com/uifaces/faces/twitter/follettkyle/128.jpg")
+            .build();
 
     private User firstExpectedUser = User.builder()
             .id(1)
@@ -25,9 +33,10 @@ public class UsersTests extends BaseTest {
             .build();
 
     @Test
-    public void getListUsers() {
+    public void getListUsersPage2() {
         ValidatableResponse response = getRequestSpecification()
                 .log().all()
+                .param("page", "2")
                 .when()
                 .get(String.format(urlPattern, URL, USERS_URI))
                 .then()
@@ -38,10 +47,13 @@ public class UsersTests extends BaseTest {
 
         UserListResponse usersList = response.extract().body().as(UserListResponse.class);
         List<User> users = usersList.getData();
-        userAssertion.validateUsersCount(users.size(), 6);
+        commonAssertion.validateCount(users.size(), 6);
 
         User firstUser = users.get(0);
-        userAssertion.validateUser(firstUser, firstExpectedUser);
+        userAssertion.validateUser(firstUser, sevenExpectedUser);
+
+        int page = usersList.getPage();
+        commonAssertion.validateField(page, 2);
     }
 
     @Test
@@ -59,7 +71,7 @@ public class UsersTests extends BaseTest {
 
         UserListResponse usersList = response.extract().body().as(UserListResponse.class);
         List<User> users = usersList.getData();
-        userAssertion.validateUsersCount(users.size(), 6);
+        commonAssertion.validateCount(users.size(), 6);
 
         User firstUser = users.get(0);
         userAssertion.validateUser(firstUser, firstExpectedUser);
@@ -97,7 +109,7 @@ public class UsersTests extends BaseTest {
         commonAssertion.validateStatusCode(actualStatusCode, HttpStatus.SC_NOT_FOUND);
 
         String responseBody = response.extract().body().asString();
-        commonAssertion.validateResponse(responseBody, "{}");
+        commonAssertion.validateField(responseBody, "{}");
     }
 
     @Test
@@ -117,7 +129,7 @@ public class UsersTests extends BaseTest {
         String createdAt = userCreatedResponse.getCreatedAt();
         String actualCreatedAt = truncateDateTimeToMinutes(createdAt);
         String expectedCreatedAt = getStringCurrentDateTime(ZoneOffset.UTC);
-        commonAssertion.validateResponse(actualCreatedAt, expectedCreatedAt);
+        commonAssertion.validateField(actualCreatedAt, expectedCreatedAt);
 
         String id = userCreatedResponse.getId();
         commonAssertion.validateFieldNotBlank(id);
@@ -141,7 +153,7 @@ public class UsersTests extends BaseTest {
         String updatedAt = userUpdatedResponse.getUpdatedAt();
         String actualUpdatedAt = truncateDateTimeToMinutes(updatedAt);
         String expectedUpdatedAt = getStringCurrentDateTime(ZoneOffset.UTC);
-        commonAssertion.validateResponse(actualUpdatedAt, expectedUpdatedAt);
+        commonAssertion.validateField(actualUpdatedAt, expectedUpdatedAt);
     }
 
     @Test
@@ -162,7 +174,7 @@ public class UsersTests extends BaseTest {
         String updatedAt = userUpdatedResponse.getUpdatedAt();
         String actualUpdatedAt = truncateDateTimeToMinutes(updatedAt);
         String expectedUpdatedAt = getStringCurrentDateTime(ZoneOffset.UTC);
-        commonAssertion.validateResponse(actualUpdatedAt, expectedUpdatedAt);
+        commonAssertion.validateField(actualUpdatedAt, expectedUpdatedAt);
     }
 
     @Test

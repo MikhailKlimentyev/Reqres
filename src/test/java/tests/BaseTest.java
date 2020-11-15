@@ -1,5 +1,6 @@
 package tests;
 
+import assertions.ColorAssertion;
 import assertions.CommonAssertion;
 import assertions.UserAssertion;
 import com.google.gson.GsonBuilder;
@@ -19,6 +20,7 @@ public class BaseTest {
 
     protected CommonAssertion commonAssertion = new CommonAssertion();
     protected UserAssertion userAssertion = new UserAssertion();
+    protected ColorAssertion colorAssertion = new ColorAssertion();
 
     public static RequestSpecification getRequestSpecification() {
         return RestAssured.given()
