@@ -4,10 +4,8 @@ import com.google.gson.annotations.Expose;
 import lombok.Data;
 
 @Data
-public class Support {
+public class UserUpdatedResponse {
 
     @Expose
-    private String url;
-    @Expose
-    private String text;
+    private String updatedAt;
 }
