@@ -15,7 +15,7 @@ public class BaseTest {
 
     protected static String URL = "https://reqres.in";
     protected static String ID = "id";
-    protected static int TIMEOUT_MS = 5000;
+    protected static int TIMEOUT_MS = 7000;
     protected String urlPattern = "%s/api/%s";
 
     protected CommonAssertion commonAssertion = new CommonAssertion();
